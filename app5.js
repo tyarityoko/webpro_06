@@ -1,5 +1,3 @@
-
-
 app.get("/janken", (req, res) => {
   let hand = req.query.hand;
   let win = Number(req.query.win);
