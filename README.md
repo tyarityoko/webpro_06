@@ -1,33 +1,27 @@
-# webpro_06
+# webpro_06 プログラムドキュメント
 
-## このプログラムについて
+このリポジトリには、`app5.js` を使用したWebアプリケーションが含まれています。このプログラムは、ユーザーに対して「じゃんけん」や「サイコロ」「占い」などの簡単なゲーム機能を提供します。
 
 ## ファイル一覧
 
-ファイル名 | 説明
--|-
-app5.js | プログラム本体
-public/janken.html | じゃんけんの開始画面
+| ファイル名              | 説明                               |
+|-------------------------|------------------------------------|
+| `app5.js`               | プログラム本体                     |
+| `public/janken.html`    | じゃんけんの開始画面               |
+| `views/dice-form.ejs`   | サイコロの面数入力画面             |
+| `views/dice.ejs`        | サイコロの結果表示画面             |
+| `views/fortune-form.ejs`| 占いの名前入力画面                |
+| `views/fortune.ejs`     | 占い結果表示画面                  |
+| `views/error.ejs`       | エラーページ                       |
 
-<<<<<<< HEAD
+## 起動方法
 
-=======
->>>>>>> 6b96fe8e846ca9bbd1521961c823cd097a6e1918
-1行目は表の見出しである． | で区切る．
-2行目は表のフォーマットである． -|- は項目が2つあることを示す．
-（3つの場合は -|-|- ，4つの場合は -|-|-|- と記す．
-3行目以降は表の内容である． | で区切る．
+1. **必要なソフトウェアをインストール**
+   プロジェクトを実行するためには、Node.jsが必要です。公式サイトから最新の安定版をインストールしてください。
 
-
-```javascript
-console.log( 'Hello' );
-```
 
 ```mermaid
 flowchart TD;
-<<<<<<< HEAD
-開始 --> 終了;
-=======
     start["開始"] --> choose["手を選択"];
     choose --> compare{"勝敗の判定"};
     compare -->|勝ち| win["勝利"];
@@ -36,34 +30,14 @@ flowchart TD;
     win --> end1["終了"];
     lose --> end1;
     draw --> end1;
-
->>>>>>> 6b96fe8e846ca9bbd1521961c823cd097a6e1918
-```
-
-
-
+ ```
 ```mermaid
-flowchart TD;
-<<<<<<< HEAD
-
-start["開始"];
-end1["終了"]
-if{"条件に合うか"}
-win["勝ち"]
-loose["負け"]
-
-start --> if
-if -->|yes| win
-win --> end1
-if -->|no| loose
-loose --> end1
-```
-=======
+ flowchart TD;
     start["開始"] --> input["目数を入力"];
     input --> roll["ランダムな目を生成"];
     roll --> display["結果を表示"];
     display --> end1["終了"];
-```
+ ```
 
 ```mermaid
 flowchart TD;
@@ -71,5 +45,5 @@ flowchart TD;
     input --> calculate["運勢を計算"];
     calculate --> display["結果を表示"];
     display --> end1["終了"];
-```
->>>>>>> 6b96fe8e846ca9bbd1521961c823cd097a6e1918
+ ```   
+
