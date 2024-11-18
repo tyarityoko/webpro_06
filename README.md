@@ -21,23 +21,31 @@ console.log( 'Hello' );
 
 ```mermaid
 flowchart TD;
-開始 --> 終了;
+    start["開始"] --> choose["手を選択"];
+    choose --> compare{"勝敗の判定"};
+    compare -->|勝ち| win["勝利"];
+    compare -->|負け| lose["敗北"];
+    compare -->|引き分け| draw["引き分け"];
+    win --> end1["終了"];
+    lose --> end1;
+    draw --> end1;
+
 ```
 
 
 
 ```mermaid
 flowchart TD;
+    start["開始"] --> input["目数を入力"];
+    input --> roll["ランダムな目を生成"];
+    roll --> display["結果を表示"];
+    display --> end1["終了"];
+```
 
-start["開始"];
-end1["終了"]
-if{"条件に合うか"}
-win["勝ち"]
-loose["負け"]
-
-start --> if
-if -->|yes| win
-win --> end1
-if -->|no| loose
-loose --> end1
+```mermaid
+flowchart TD;
+    start["開始"] --> input["名前を入力"];
+    input --> calculate["運勢を計算"];
+    calculate --> display["結果を表示"];
+    display --> end1["終了"];
 ```
