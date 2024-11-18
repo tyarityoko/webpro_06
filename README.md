@@ -63,6 +63,7 @@
    $ git push
    ``` 
 3. **それぞれの遊びのurlに飛びます**
+
    じゃんけんのurl
    ```bash
    http://localhost:8080/janken
@@ -78,8 +79,9 @@
    http://localhost:8080/fortune?name=あなたの名前
    ```
 ## フローチャート
+
 1. **じゃんけん**
-   
+ 
 ```mermaid
 flowchart TD;
     start["開始"] --> choose["手を選択"];
