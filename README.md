@@ -19,7 +19,67 @@
 1. **必要なソフトウェアをインストール**
    プロジェクトを実行するためには、Node.jsが必要です。公式サイトから最新の安定版をインストールしてください。
 
+2. **依存関係のインストール**
+   プロジェクトディレクトリで以下のコマンドを実行し、必要なパッケージをインストールします。
 
+   ```bash
+   npm install express ejs
+   ```
+3. **サーバーの起動**
+   次に、以下のコマンドでサーバーを起動します。
+
+   ```bash
+   node app5.js
+   ```
+   
+   サーバーが正常に起動すると、以下のメッセージが表示されます。
+
+   ```bash
+   Example app listening on port 8080!
+   ```
+
+4. **ブラウザでのアクセス** 
+   ブラウザを開き、以下のURLにアクセスします。
+
+   ```bash
+   http://localhost:8080
+   ```
+
+## コンパイル方法
+
+1. **webpro_06を開きます**
+   コードは以下の通りにします。
+
+   ```bash
+   cd webpro_06
+   ```
+
+2. **コードをpushします**
+   コードは以下の通りにします。
+
+   ```bash
+   $ git add .
+   $ git commit -am 'コメント'
+   $ git push
+   ``` 
+3. **それぞれの遊びのurlに飛びます**
+   じゃんけんのurl
+   ```bash
+   http://localhost:8080/janken
+   ```
+
+   サイコロのurl
+   ```bash
+   http://localhost:8080/dice?sides=6
+   ```
+
+   占いのurl
+   ```bash
+   http://localhost:8080/fortune?name=あなたの名前
+   ```
+## フローチャート
+1. **じゃんけん**
+   
 ```mermaid
 flowchart TD;
     start["開始"] --> choose["手を選択"];
@@ -31,6 +91,9 @@ flowchart TD;
     lose --> end1;
     draw --> end1;
  ```
+
+2. **サイコロ**
+   
 ```mermaid
  flowchart TD;
     start["開始"] --> input["目数を入力"];
@@ -38,6 +101,7 @@ flowchart TD;
     roll --> display["結果を表示"];
     display --> end1["終了"];
  ```
+3. **占い**
 
 ```mermaid
 flowchart TD;
