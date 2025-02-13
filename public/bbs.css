@@ -1,97 +1,66 @@
-/* 基本的なスタイル */
+/* 全体レイアウト */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
     background-color: #f4f4f9;
+    color: #333;
+    margin: 20px;
 }
 
-/* 投稿エリア */
-#bbs {
+h1 {
+    text-align: center;
     margin-bottom: 20px;
 }
 
-/* 投稿を囲むコンテナ */
-.cover {
-    border-bottom: 1px solid #c0c0c0;
-    margin: 10px 0;
+div {
+    margin-bottom: 20px;
+}
+
+input {
+    margin: 5px 10px;
     padding: 5px;
 }
 
-/* 名前のスタイル */
-.name {
-    font-weight: bold;
-    width: 8em;
-    display: inline-block;
-}
-
-/* メッセージのスタイル */
-.mes {
-    margin-left: 20px;
-    display: inline-block;
-    color: #333;
-}
-
-/* 入力フィールド */
-input[type="text"] {
-    padding: 5px;
-    font-size: 1em;
-    margin: 5px 0;
-    width: 250px;
-}
-
-/* 送信ボタン */
 button {
-    background-color: #4CAF50;
+    padding: 5px 10px;
+    margin-left: 5px;
+    background-color: #007BFF;
     color: white;
     border: none;
-    padding: 10px 20px;
-    margin: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 1em;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
 }
 
-/* 各操作ボタンのスタイル */
-#delete, #edit, #clear {
-    background-color: #f44336;
+/* 投稿のデザイン */
+.cover {
+    border-bottom: 1px solid #c0c0c0;
+    margin: 3px 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
 }
 
-#delete:hover, #edit:hover, #clear:hover {
-    background-color: #e53935;
+.name {
+    font-weight: bold;
+    width: 8em;
 }
 
-/* 投稿チェックボタンのスタイル */
-#check {
-    background-color: #2196F3;
+.mes {
+    flex-grow: 1;
+    margin-left: 10px;
 }
 
-#check:hover {
-    background-color: #1976d2;
+.actions {
+    margin-left: 10px;
+    display: flex;
+    gap: 5px;
 }
 
-/* ボタンを横並びに配置 */
-div > button {
-    margin-right: 10px;
+.like-count {
+    margin-left: 5px;
+    color: #dc3545;
+    font-weight: bold;
 }
-
-/* 投稿編集・削除のスタイル */
-#edit, #delete {
-    background-color: #ff9800;
-}
-
-#edit:hover, #delete:hover {
-    background-color: #fb8c00;
-}
-
-/* 全削除のスタイル */
-#clear {
-    background-color: #9e9e9e;
-}
-
-#clear:hover {
-    background-color: #757575;
-}
-
