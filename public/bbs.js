@@ -3,73 +3,145 @@
 let number = 0;
 const bbs = document.querySelector('#bbs');
 
-// --- 既存のコード省略 ---
+document.querySelector('#post').addEventListener('click', () => {
+    const name = document.querySelector('#name').value;
+    const message = document.querySelector('#message').value;
 
-// 投稿削除機能
-document.querySelector('#delete').addEventListener('click', () => {
-    const id = Number(prompt("削除する投稿のIDを入力してください:"));
     const params = {
         method: "POST",
-        body: `id=${id}`,
+        body:  'name='+name+'&message='+message,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     };
-    fetch("/delete", params)
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                alert("削除しました！");
-                location.reload();
-            } else {
-                alert("削除に失敗しました。");
+    console.log(params);
+    const url = "/post";
+    fetch(url, params)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Error');
             }
+            return response.json();
+        })
+        .then((response) => {
+            console.log(response);
+            document.querySelector('#message').value = "";
         });
 });
 
-// 投稿編集機能
-document.querySelector('#edit').addEventListener('click', () => {
-    const id = Number(prompt("編集する投稿のIDを入力してください:"));
-    const name = prompt("新しい名前を入力してください:");
-    const message = prompt("新しいメッセージを入力してください:");
-    const params = {
-        method: "POST",
-        body: `id=${id}&name=${name}&message=${message}`,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
-    fetch("/edit", params)
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                alert("編集しました！");
-                location.reload();
-            } else {
-                alert("編集に失敗しました。");
-            }
-        });
-});
-
-// 投稿全削除機能
-document.querySelector('#clear').addEventListener('click', () => {
-    const confirmClear = confirm("全ての投稿を削除しますか？");
-    if (!confirmClear) return;
-
+document.querySelector('#check').addEventListener('click', () => {
     const params = {
         method: "POST",
         body: '',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     };
-    fetch("/clear", params)
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                alert("全ての投稿を削除しました！");
-                location.reload();
+
+    const url = "/check";
+    fetch(url, params)
+        .then((response) => {
+            if (!response.ok) throw new Error('Error');
+            return response.json();
+        })
+        .then((response) => {
+            if (number != response.number) {
+                fetch('/read', {
+                    method: "POST",
+                    body: `start=${number}`,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                })
+                    .then((res) => res.json())
+                    .then((res) => {
+                        number += res.messages.length;
+                        for (let mes of res.messages) {
+                            let cover = document.createElement('div');
+                            cover.className = 'cover';
+
+                            let name_area = document.createElement('span');
+                            name_area.className = 'name';
+                            name_area.innerText = mes.name;
+
+                            let mes_area = document.createElement('span');
+                            mes_area.className = 'mes';
+                            mes_area.innerText = mes.message;
+
+                            // いいねボタン
+                            let like_btn = document.createElement('button');
+                            like_btn.innerText = `👍 (${mes.likes || 0})`;
+                            like_btn.addEventListener('click', () => {
+                                fetch(`/bbs/${mes.id}/like`, {
+                                    method: "POST",
+                                    headers: { 'Content-Type': 'application/json' },
+                                })
+                                    .then((res) => res.json())
+                                    .then((res) => {
+                                        like_btn.innerText = `👍 (${res.likes})`; 
+                                    })
+                                    .catch(console.error);
+                            });
+
+                            // コメントフォーム
+                            let comment_area = document.createElement('div');
+                            let comment_input = document.createElement('input');
+                            comment_input.placeholder = 'コメントを追加';
+                            let comment_btn = document.createElement('button');
+                            comment_btn.innerText = '送信';
+
+                            comment_btn.addEventListener('click', () => {
+                                fetch(`/bbs/${mes.id}/comment`, {
+                                    method: 'POST',
+                                    body: JSON.stringify({ comment: comment_input.value }),
+                                    headers: { 'Content-Type': 'application/json' }
+                                })
+                                    .then((res) => res.json())
+                                    .then((res) => {
+                                        let new_comment = document.createElement('div');
+                                        new_comment.innerText = res.comments[res.comments.length - 1];
+                                        comment_area.appendChild(new_comment);
+                                        comment_input.value = ''; 
+                                    })
+                                    .catch(console.error);
+                            });
+
+                            // 投稿編集ボタン
+                            let edit_btn = document.createElement('button');
+                            edit_btn.innerText = '編集';
+                            edit_btn.addEventListener('click', () => {
+                                let edit_area = document.createElement('input');
+                                edit_area.value = mes.message; 
+                                let save_btn = document.createElement('button');
+                                save_btn.innerText = '保存';
+
+                                save_btn.addEventListener('click', () => {
+                                    fetch(`/bbs/${mes.id}`, {
+                                        method: 'PUT',
+                                        body: JSON.stringify({ message: edit_area.value }),
+                                        headers: { 'Content-Type': 'application/json' }
+                                    })
+                                        .then((res) => res.json())
+                                        .then((res) => {
+                                            mes_area.innerText = res.message;
+                                            cover.removeChild(edit_area);
+                                            cover.removeChild(save_btn);
+                                        })
+                                        .catch(console.error);
+                                });
+
+                                cover.appendChild(edit_area);
+                                cover.appendChild(save_btn);
+                            });
+
+                            // 追加する要素を順番に組み立て
+                            cover.appendChild(name_area);
+                            cover.appendChild(mes_area);
+                            cover.appendChild(like_btn);
+                            cover.appendChild(comment_area);
+                            comment_area.appendChild(comment_input);
+                            comment_area.appendChild(comment_btn);
+                            cover.appendChild(edit_btn);
+
+                            bbs.appendChild(cover);
+                        }
+                    });
             }
         });
 });
-
