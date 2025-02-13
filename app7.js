@@ -1,41 +1,81 @@
 "use strict";
-
 const express = require("express");
 const app = express();
+const PORT = 8080;
 
-let bbs = []; // メモリ内の投稿データ
+// 静的ファイルを提供
+app.use(express.static('public'));
 
-app.set('view engine', 'ejs');
-app.use("/public", express.static(__dirname + "/public"));
-app.use(express.urlencoded({ extended: true }));
-
-// --- 既存のコード省略 ---
-
-// 投稿削除機能
-app.post("/delete", (req, res) => {
-    const id = Number(req.body.id);
-    bbs = bbs.filter((post, index) => index !== id);
-    res.json({ success: true, number: bbs.length });
+// サーバー起動（ここで1回だけ呼び出す）
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
 });
 
-// 投稿編集機能
-app.post("/edit", (req, res) => {
-    const id = Number(req.body.id);
-    const name = req.body.name;
-    const message = req.body.message;
-    if (bbs[id]) {
-        bbs[id] = { name, message };
-        res.json({ success: true });
+let bbs = []; // 投稿データを蓄積
+let idCounter = 1; // 投稿 ID 用のカウンタ
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// 以下は既存のBBS関連コード
+app.post("/check", (req, res) => res.json({ number: bbs.length }));
+
+app.post("/read", (req, res) => {
+    const start = Number(req.body.start);
+    res.json({ messages: start ? bbs.slice(start) : bbs });
+});
+
+app.post("/post", (req, res) => {
+  const { name, message } = req.body;
+  const post = { 
+      id: idCounter++, // 一意の ID を割り当て
+      name, 
+      message, 
+      likes: 0, 
+      comments: [] 
+  };
+  bbs.push(post);
+  res.json({ number: bbs.length, id: post.id }); // 新規投稿の ID を返す
+});
+
+// 1. いいね機能
+app.post("/bbs/:id/like", (req, res) => {
+    const postId = Number(req.params.id);
+    const post = bbs.find((post, index) => index + 1 === postId);
+
+    if (post) {
+        post.likes = (post.likes || 0) + 1;
+        res.json({ success: true, likes: post.likes });
     } else {
-        res.json({ success: false });
+        res.status(404).json({ success: false, error: "Post not found" });
     }
 });
 
-// 投稿全削除機能
-app.post("/clear", (req, res) => {
-    bbs = [];
-    res.json({ success: true });
+// 2. コメント機能
+app.post("/bbs/:id/comment", (req, res) => {
+    const postId = Number(req.params.id);
+    const { comment } = req.body;
+    const post = bbs.find((post, index) => index + 1 === postId);
+
+    if (post) {
+        post.comments = post.comments || [];
+        post.comments.push(comment);
+        res.json({ success: true, comments: post.comments });
+    } else {
+        res.status(404).json({ success: false, error: "Post not found" });
+    }
 });
 
-app.listen(8080, () => console.log("Example app listening on port 8080!"));
+// 3. 投稿編集機能
+app.put("/bbs/:id", (req, res) => {
+    const postId = Number(req.params.id);
+    const { message } = req.body;
+    const post = bbs.find((post, index) => index + 1 === postId);
 
+    if (post) {
+        post.message = message;
+        res.json({ success: true, message: post.message });
+    } else {
+        res.status(404).json({ success: false, error: "Post not found" });
+    }
+});
